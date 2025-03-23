@@ -5,7 +5,11 @@ require('dotenv').config()
 const DB_URL = process.env.DB_URL
 const mongoURL = DB_URL
 
-mongoose.connect(mongoURL)
+mongoose.connect(mongoURL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    tlsAllowInvalidCertificates: true, 
+})
 
 const db = mongoose.connection;
 
