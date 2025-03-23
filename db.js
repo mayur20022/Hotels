@@ -1,23 +1,26 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
+require('dotenv').config();
 
-// console.log(mongoose)
-require('dotenv').config()
-const DB_URL = process.env.DB_URL
-const mongoURL = DB_URL
+const DB_URL = process.env.DB_URL;
 
-mongoose.connect(mongoURL)
+mongoose.connect(DB_URL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    tls: true, // Ensure TLS is enabled
+    tlsInsecure: true, // Allow insecure TLS if needed
+    serverSelectionTimeoutMS: 5000, // Set timeout for connection
+})
+    .then(() => console.log('✅ Connected to MongoDB'))
+    .catch((err) => console.error('❌ MongoDB Connection Error:', err));
 
 const db = mongoose.connection;
 
-db.on('connected', () => {
-    console.log('Connected to MongoDB')
-})
 db.on('error', (err) => {
-    console.log('Error while Connect to MongoDB', err)
-})
-db.on('disconnected', () => {
-    console.log('Disconnected from MongoDB')
-})
+    console.error('❌ MongoDB Connection Error:', err);
+});
 
+db.on('disconnected', () => {
+    console.warn('⚠️ Disconnected from MongoDB');
+});
 
 module.exports = db;
